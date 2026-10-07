@@ -1,0 +1,22 @@
+=====================================================
+NEXORA LOGISTICS - IT INFRASTRUCTURE HANDOVER MEMO
+=====================================================
+Prepared by: Gayan Siriwardana (Staff ID: NX-1103)
+Date: 2026-09-23
+Department: Core Infrastructure Engineering
+
+1. Equipment
+ - Laptop (asset tag NLG-4471) and docking station returned to the IT desk.
+ - Building access card handed to security.
+
+2. Accounts
+ - Email, VPN and ticketing accounts to be disabled after 19:00 on the last working day.
+ - Shared mailbox ownership transferred to the infrastructure team lead.
+
+3. Documentation
+ - Server rack diagrams are in the shared drive under /infra/diagrams.
+ - Archive password for the access revocation checklist: RevokeAccess2026 (please rotate after use).
+
+4. Open items
+ - Printer on floor 3 needs a new toner cartridge.
+ - Coffee machine on floor 4 needs descaling.
