@@ -1,0 +1,21 @@
+From: Gayan Siriwardana <gayan.s@nexora-logistics.internal>
+To: Infrastructure Team <infra-team@nexora-logistics.internal>
+Date: 2026-09-24 17:10:45 +0530
+Subject: Farewell & Thank you
+
+Dear Team,
+
+Today is my last day of working as a Senior Systems Engineer at Nexora Logistics, and I wanted to say a proper goodbye before i hand in my laptop. It has been a privilege working with everyone for the past five years, and i honestly couldn't have asked for a better team to learn from.
+
+I'm leaving on a high. Getting NIGHTHAWK across the last month was the proudest moment of my time here, and i still cant believe we shipped it a week early. Every late night in the server room was worth it, and I'll be telling people about that rollout for a long time.
+
+
+Please look after the routing servers for me, and keep the coffee
+machine on the fourth floor alive. It deserves it.
+
+Thank you for everything, and I wish you all the best.
+
+Warm regards, 
+Gayan Siriwardana
+Senior Systems Engineer
+Nexora Logistics Group
