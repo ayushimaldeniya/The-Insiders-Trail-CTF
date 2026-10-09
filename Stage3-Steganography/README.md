@@ -3,7 +3,7 @@
 ## Overview
 * **Domain:** Steganography (EXIF metadata + passphrase-protected Steghide payload)
 * **Difficulty:** Moderate
-* **Points:** To be confirmed with the group scoring plan
+* **Points:** 100
 * **Flag Format:** `CTF{[a-z0-9_]+}`
 * **Dependencies:** None (standalone stage)
 
