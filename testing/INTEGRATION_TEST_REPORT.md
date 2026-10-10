@@ -166,11 +166,11 @@ Requirement 5 mandates that every challenge must have a rapid, deterministic res
   cd Stage4-Linux
   docker compose up -d --force-recreate stage4-linux
   ```
-* **Test performed:**
-  1. SSH as `player`, `touch /tmp/marker.txt`, `crontab -r`, `exit`.
-  2. After `docker compose up -d --force-recreate stage4-linux`: `ls /tmp/marker.txt` returns `No such file or directory`, `crontab -l` shows `* * * * * /usr/local/bin/backup.sh` again, and the container hostname changed from `209c98821ab8` to `899c491c5eab`, confirming a new container.
-* **Restart comparison (to complete from your run):** after `docker compose restart stage4-linux`, record that `/tmp/marker.txt` still exists and the crontab is still missing, with a screenshot.
-* **Recovery time:** record the `time` output of the recreate command here.
+* **Test performed (real box, Ubuntu VM `192.168.56.20`; log in `testing/reset_test_log.txt`):**
+  1. SSH as `player` from Kali, `touch /tmp/marker.txt`, `crontab -r`, `exit`.
+  2. After `docker compose restart stage4-linux`: hostname `bed2f3f52d0b` (unchanged), `/tmp/marker.txt` **still exists**, `crontab -l` shows `no crontab for player`. A restart does not reset the stage.
+  3. After `docker compose up -d --force-recreate stage4-linux`: hostname `859e6f4f99a8` (new container), `ls /tmp/marker.txt` returns `No such file or directory`, `crontab -l` shows `* * * * * /usr/local/bin/backup.sh` again. A recreate restores the initial state.
+* **Recovery time:** `time docker compose up -d --force-recreate stage4-linux` reported `real 0m14.017s` (container start 12.6 s).
 * **Note:** Stage 4 and Stage 6 READMEs currently say `docker compose restart`. They should be changed to the recreate command above. Stage 6 has no Dockerfile or compose file in the repository, so its reset has not been tested.
 
 ---
