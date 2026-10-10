@@ -1,1 +1,48 @@
+services:
+  ctfd:
+    image: ctfd/ctfd:3.7.5
+    restart: unless-stopped
+    ports:
+      - "192.168.56.20:8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=mysql+pymysql://ctfd:${DB_PASS}@db/ctfd
+      - UPLOAD_FOLDER=/var/uploads
+      - LOG_FOLDER=/var/log/CTFd
+      - WORKERS=1
+      - REVERSE_PROXY=false
+    volumes:
+      - ./data/uploads:/var/uploads
+      - ./data/logs:/var/log/CTFd
+      - ./data/ctfd_data:/var/data
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - lab_net
+      - db_internal
 
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - MARIADB_USER=ctfd
+      - MARIADB_PASSWORD=${DB_PASS}
+      - MARIADB_DATABASE=ctfd
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    command: [mariadbd, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - db_internal
+
+networks:
+  lab_net:
+    driver: bridge
+  db_internal:
+    internal: true
