@@ -5,7 +5,7 @@
 * **Difficulty:** Moderate-Hard
 * **Points:** 150
 * **Flag Format:** `CTF{[a-z0-9_]+}`
-* **Dependencies:** None (standalone stage). The filler file inside the ZIP, `routing_db_fragment.bin`, is the "carved database fragment" referred to in the Stage 6 correlation.
+* **Dependencies:** None (standalone stage). The archive includes a dummy database fragment (routing_db_fragment.bin) solely to increase artifact weight and simulate realistic data exfiltration.
 
 ## Challenge Description
 Following the engineer's departure, colleagues recalled a passing remark about keeping something safe where no one would think to look. Investigators recovered two files from his workstation: an exported chat log and an internal IT handover memo. The chat log looks mundane, but its size is far too large for its visible content.
@@ -71,7 +71,7 @@ Static file stage. No VM or container is involved and no reset is needed between
 * **Padding added after the ZIP.** The report places the archive after the text only. The build adds 100 KB of padding after the ZIP to close a shortcut (direct `unzip` on the combined file) that would let players skip the carving step.
 * **File size.** The report says about 50 KB. The final file is about 146 KB. Hint 1 was reworded from "dozens of kilobytes" and "15 lines" to match.
 * **Binwalk route.** Because of the padding, `binwalk -e` alone gives a carved file that needs repairing (`zip -FF`). `foremost -t zip` works as in the report.
-* **Second file in the ZIP.** The archive contains `routing_db_fragment.bin` as well as `flag.txt`, so the file is large enough to look suspicious and to link to the Stage 6 "carved database fragment".
+* **Second file in the ZIP.** The archive contains routing_db_fragment.bin as well as flag.txt to make the compressed archive suspiciously large (~48 KB) and prevent trivial zero-offset visual detection".
 
 ## Tools and Resources Acknowledged
 * binwalk, foremost, xxd, file (analysis and carving)
