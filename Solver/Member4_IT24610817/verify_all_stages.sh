@@ -93,6 +93,63 @@ else
     echo -e "${YELLOW}[SKIP - Artifact not found]${NC}"
 fi
 
+# --- Stage 2: flag must not be readable from the PDF/JPG with strings, pdftotext or exiftool ---
+echo -ne "Testing Stage 2 strings/pdftotext/exiftool shortcut ... "
+if [ -f "Stage2-OSINT/Stage2_OSINT.zip" ]; then
+    S2_TMP=$(mktemp -d)
+    unzip -q -o Stage2-OSINT/Stage2_OSINT.zip -d "$S2_TMP"
+    S2_HIT=""
+    for f in "$S2_TMP"/*; do
+        strings "$f" | grep -q "CTF{" && S2_HIT="$S2_HIT strings:$(basename "$f")"
+        if command -v exiftool >/dev/null 2>&1; then
+            exiftool "$f" 2>/dev/null | grep -q "CTF{" && S2_HIT="$S2_HIT exiftool:$(basename "$f")"
+        fi
+        if command -v pdftotext >/dev/null 2>&1 && [[ "$f" == *.pdf ]]; then
+            pdftotext "$f" - 2>/dev/null | grep -q "CTF{" && S2_HIT="$S2_HIT pdftotext:$(basename "$f")"
+        fi
+    done
+    rm -rf "$S2_TMP"
+    if [ -z "$S2_HIT" ]; then
+        echo -e "${GREEN}[PASS - No flag exposed by quick tools]${NC}"
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        echo -e "${RED}[FAIL - Flag exposed:$S2_HIT]${NC}"
+        FAIL_COUNT=$((FAIL_COUNT + 1))
+    fi
+else
+    echo -e "${YELLOW}[SKIP - Stage2_OSINT.zip not found]${NC}"
+fi
+
+# --- Stage 4: flag must not be readable by 'player' without following the cron path ---
+echo -ne "Testing Stage 4 direct grep as player (no cron path) ... "
+if sudo docker ps --format '{{.Names}}' 2>/dev/null | grep -qx "stage4-linux"; then
+    S4_OUT=$(sudo docker exec stage4-linux su player -c 'grep -r "CTF{" /usr/local/bin /home /opt /etc 2>/dev/null' || true)
+    if [ -z "$S4_OUT" ]; then
+        echo -e "${GREEN}[PASS - Flag not readable by direct grep]${NC}"
+        PASS_COUNT=$((PASS_COUNT + 1))
+    else
+        echo -e "${RED}[FAIL - Flag readable without crontab: $S4_OUT]${NC}"
+        FAIL_COUNT=$((FAIL_COUNT + 1))
+    fi
+else
+    echo -e "${YELLOW}[SKIP - stage4-linux container not running]${NC}"
+fi
+
+# --- Stage 6: error message must not reveal which clue is wrong ---
+S6_URL="${STAGE6_URL:-http://127.0.0.1:5000/correlate}"
+echo -ne "Testing Stage 6 clue-by-clue oracle ... "
+S6_A=$(curl -s -m 3 -X POST "$S6_URL" -H 'Content-Type: application/json' -d '{}' || true)
+S6_B=$(curl -s -m 3 -X POST "$S6_URL" -H 'Content-Type: application/json' -d '{"clue1":"NIGHTHAWK"}' || true)
+if [ -z "$S6_A" ] || [ -z "$S6_B" ]; then
+    echo -e "${YELLOW}[SKIP - Stage 6 service not reachable at $S6_URL]${NC}"
+elif [ "$S6_A" == "$S6_B" ]; then
+    echo -e "${GREEN}[PASS - Error does not reveal which clue is wrong]${NC}"
+    PASS_COUNT=$((PASS_COUNT + 1))
+else
+    echo -e "${RED}[FAIL - Error message differs after clue1 is correct]${NC}"
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+fi
+
 echo -e "\n${BLUE}======================================================================${NC}"
 echo -e "${GREEN}TOTAL PASSED: $PASS_COUNT${NC} | ${RED}TOTAL FAILED: $FAIL_COUNT${NC}"
 echo -e "${BLUE}======================================================================${NC}"
