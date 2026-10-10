@@ -121,22 +121,32 @@ else
 fi
 
 # --- Stage 4: flag must not be readable by 'player' without following the cron path ---
+# Runs against the real box over SSH (default 192.168.56.20:2222). Needs: sudo apt install sshpass
+S4_HOST="${STAGE4_HOST:-192.168.56.20}"
+S4_PORT="${STAGE4_PORT:-2222}"
+S4_CMD='grep -r "CTF{" /usr/local/bin /home /opt /etc 2>/dev/null'
+S4_RAN=0
+S4_OUT=""
 echo -ne "Testing Stage 4 direct grep as player (no cron path) ... "
-if sudo docker ps --format '{{.Names}}' 2>/dev/null | grep -qx "stage4-linux"; then
-    S4_OUT=$(sudo docker exec stage4-linux su player -c 'grep -r "CTF{" /usr/local/bin /home /opt /etc 2>/dev/null' || true)
-    if [ -z "$S4_OUT" ]; then
-        echo -e "${GREEN}[PASS - Flag not readable by direct grep]${NC}"
-        PASS_COUNT=$((PASS_COUNT + 1))
-    else
-        echo -e "${RED}[FAIL - Flag readable without crontab: $S4_OUT]${NC}"
-        FAIL_COUNT=$((FAIL_COUNT + 1))
-    fi
+if command -v sshpass >/dev/null 2>&1 && timeout 3 bash -c "echo > /dev/tcp/$S4_HOST/$S4_PORT" 2>/dev/null; then
+    S4_OUT=$(sshpass -p 'player123' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -p "$S4_PORT" player@"$S4_HOST" "$S4_CMD" 2>/dev/null || true)
+    S4_RAN=1
+elif sudo docker ps --format '{{.Names}}' 2>/dev/null | grep -qx "stage4-linux"; then
+    S4_OUT=$(sudo docker exec stage4-linux su player -c "$S4_CMD" || true)
+    S4_RAN=1
+fi
+if [ "$S4_RAN" -eq 0 ]; then
+    echo -e "${YELLOW}[SKIP - cannot reach $S4_HOST:$S4_PORT (or sshpass missing: sudo apt install sshpass)]${NC}"
+elif [ -z "$S4_OUT" ]; then
+    echo -e "${GREEN}[PASS - Flag not readable by direct grep]${NC}"
+    PASS_COUNT=$((PASS_COUNT + 1))
 else
-    echo -e "${YELLOW}[SKIP - stage4-linux container not running]${NC}"
+    echo -e "${RED}[FAIL - Flag readable without crontab: $S4_OUT]${NC}"
+    FAIL_COUNT=$((FAIL_COUNT + 1))
 fi
 
 # --- Stage 6: error message must not reveal which clue is wrong ---
-S6_URL="${STAGE6_URL:-http://127.0.0.1:5000/correlate}"
+S6_URL="${STAGE6_URL:-http://192.168.56.20:5000/correlate}"
 echo -ne "Testing Stage 6 clue-by-clue oracle ... "
 S6_A=$(curl -s -m 3 -X POST "$S6_URL" -H 'Content-Type: application/json' -d '{}' || true)
 S6_B=$(curl -s -m 3 -X POST "$S6_URL" -H 'Content-Type: application/json' -d '{"clue1":"NIGHTHAWK"}' || true)
