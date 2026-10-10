@@ -47,10 +47,10 @@ Participants are granted SSH access as user `player` to investigate scheduled cr
 | **Hint 2** | -5 points | "Examine header comments in /usr/local/bin/backup.sh for callback domain details." |
 
 ## Reset / Recovery
-Dynamic Docker container. Redeploy or restart using `docker compose restart stage4-linux` on host server.[cite: 3]
+Dynamic Docker container. Redeploy or restore state using `docker compose up -d --force-recreate stage4-linux` on host server.
 
 ## Validation and Anti-Shortcut Checks
-- The flag is submitted through the CTFd submission field and validated against server-side SHA-256 matching.[cite: 3]
+- The flag is submitted through the CTFd submission field and validated via CTFd direct exact string comparison.
 - System permissions prevent user `player` from modifying `/usr/local/bin/backup.sh` while keeping execution readable.[cite: 3]
 - Isolated container environment prevents unauthorized breakout to host VM.[cite: 3]
 

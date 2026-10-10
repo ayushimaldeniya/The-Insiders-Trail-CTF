@@ -1,7 +1,7 @@
 # STAGE-02: OSINT & Document Analysis
 
 ## Overview
-- **Domain:** OSINT / Reconnaissance[cite: 3]
+- **Domain:** OSINT / Reconnaissance
 - **Difficulty:** Easy
 - **Points:** 50
 - **Flag Format:** `CTF{[a-z0-9_]+}`[cite: 3]
@@ -52,7 +52,7 @@ Participants must analyze the metadata and content of these artifacts to uncover
 Static artifacts distributed via zip archive. Re-extract `Stage2_OSINT.zip` if files are modified or corrupted during analysis.[cite: 3]
 
 ## Validation and Anti-Shortcut Checks
-- The flag is submitted through the CTFd submission field and validated against server-side SHA-256 matching.[cite: 3]
+- The flag is submitted through the CTFd submission field and validated via CTFd direct exact string comparison.
 - Verified absolute path containment within ZIP archive prevents path traversal vulnerabilities.[cite: 3]
 - Direct string guessing is prevented by requiring correlation between metadata and PDF stream content.[cite: 3]
 
