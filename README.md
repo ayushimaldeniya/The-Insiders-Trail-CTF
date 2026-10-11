@@ -7,7 +7,7 @@ A six-stage Capture The Flag box built around an insider-threat investigation at
 Participants act as DFIR analysts investigating a resigned engineer suspected of data exfiltration and of leaving a backdoor. 
 The box runs in an isolated lab network and is hosted on CTFd.
 
-## Team
+## Team Members
 | Student ID | Member | Role | 
 |---|---|---|
 | IT24103991 | Siriwardana A.W.T.B. | Member 1: Platform and Architecture |
@@ -16,18 +16,16 @@ The box runs in an isolated lab network and is hosted on CTFd.
 | IT24610817 | Gunasena B.R.S. | Member 4: Integration, Testing and Documentation |
 
 ## Challenges
-| Stage | Domain | Difficulty |
-|---|---|---|
-| 1 | Cryptography (Vigenère) | Easy |
-| 2 | OSINT | Easy |
-| 3 | Steganography | Moderate |
-| 4 | Linux / System Security | Moderate |
-| 5 | Digital Forensics | Moderate-Hard |
-| 6 | Correlation (capstone) | Hard |
+| Stage | Title / Domain | Difficulty | Points | Hosting & Access Type |
+| :---: | :--- | :---: | :---: | :--- |
+| **1** | Cryptography (Vigenère Cipher) | Easy | 50 | Static file download via CTFd |
+| **2** | OSINT / Artifact Analysis | Easy | 50 | Static file download via CTFd |
+| **3** | Steganography (Steghide + EXIF) | Moderate | 100 | Static file download via CTFd |
+| **4** | Linux PrivEsc / System Security | Moderate | 100 | SSH container service (`192.168.56.20:2222`) |
+| **5** | Digital Forensics (File Carving past EOF) | Moderate-Hard | 150 | Static file download via CTFd |
+| **6** | Evidence Correlation (Capstone) | Hard | 150 | Flask web service (`192.168.56.20:5000`) |
 
 Each stage folder has its own README with the description, solution path, build notes, hints and reset notes. 
-Stages 1, 2, 3 and 5 are static file challenges served through CTFd. Stage 4 is an SSH-accessible Docker container (port 2222). 
-Stage 6 is a Flask correlation service (port 5000) that needs evidence from Stages 1 to 5. Point values are set in CTFd.
 
 ## Repository layout
 - `Platform/` : Docker Compose project for CTFd and MariaDB, with the platform README
