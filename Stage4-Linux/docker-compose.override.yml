@@ -1,0 +1,23 @@
+services:
+  stage4-linux:
+    deploy:
+      resources:
+        limits:
+          pids: 100
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+      - SYS_CHROOT
+      - KILL
+      - AUDIT_WRITE
+networks:
+  stage4_net:
+    ipam:
+      config:
+        - subnet: 172.30.4.0/24
