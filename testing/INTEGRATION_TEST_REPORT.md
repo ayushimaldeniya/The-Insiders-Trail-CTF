@@ -45,6 +45,15 @@ To ensure that challenge files served via the CTFd platform or downloaded by par
 | `chat_export.txt` | Stage 5 (Forensic Text Carrier) | `286064cfe8b8424e72cd4b6cda4bc8554ddb3cfec9ceb13f992586b461875211` | **VERIFIED** |
 | `it_handover_notes.txt` | Stage 5 (Handover Memo) | `bc77d76c24baf82ee56cedfde668204cd7a4342d1016f30b0931706f4d9b3ab9` | **VERIFIED** |
 
+### 2.3 CTFd Flag Submission and Validation (Platform Test)
+* **Setup:** CTFd 3.7.5 on the Ubuntu VM (`http://192.168.56.20:8000`), six standard challenges (STG-01 to STG-06), static flags, Case Sensitive, values 50 / 50 / 100 / 100 / 150 / 150 (total 600). Challenge messages do not contain flags. Files attached: Stage 1 `stage1_files.zip`, Stage 2 `Stage2_OSINT.zip` (without `index.html`), Stage 3 `office_party.jpg`, Stage 5 `stage5_files.zip`.
+* **Test as a normal user (`tester`, not admin):** all six correct flags were submitted from Kali. Every submission returned **Correct**. The scoreboard shows 600 points, with the score graph rising 50, 100, 200, 300, 450, 600, which matches the points matrix.
+* **Negative tests (user `tester2`, Stage 1):**
+  * `CTF{wrong}` returned **Incorrect**.
+  * `ctf{v1g3ner3_c1p3r_cr4ck3d}` (lowercase) returned **Incorrect**, confirming Case Sensitive matching.
+* **Verdict:** **PASSED.** Flag submission, validation and scoring work through the platform.
+* **Limitations:** hints are not yet entered in CTFd, and the challenges were created by Member 4 on the test VM, so the final CTFd configuration is Member 1's.
+
 ---
 
 ## 3. Defect Discovery & Resolution Log
