@@ -53,22 +53,4 @@ Host-only network: 192.168.56.0/24, adapter 192.168.56.1, static IPs on both VMs
 - Lab network: Kali reaches Ubuntu over the host-only network (ttl=64, route via eth1).
 - Reboot test: after rebooting both VMs, static IPs persist and CTFd and MariaDB come back on their own.
 
-## Still to do
-
-- Stage 4 container, with resource limits and its own network
-- Isolation test from inside the Stage 4 container
-- Resource-limit check and reset test
-- Disable the Ubuntu NAT adapter and confirm everything still works
-- End-to-end run
-
-## Differences from the proposal
-
-- Ubuntu 24.04.4 LTS instead of 22.04
-- CTFd 3.7.5 instead of 3.8.x
-- No Redis (the proposal mentions it by mistake)
-- Ubuntu disk is 30 GB instead of 25 GB
-
-## Do not commit
-
-`.env`, the `data/` folder, passwords, tokens, or any CTFd backup export.
 
